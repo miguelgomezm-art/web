@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Registro de Órdenes Flota 930E</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; }
+        .nav-link { display: inline-block; background: #002f6c; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; margin-bottom: 20px; font-size: 13px; }
+        .nav-link:hover { background: #001f4d; }
+    </style>
+</head>
+<body>
+
+    <header style="background-color: #002f6c;">
+        <h2>Panel de Control - Programación de Mantenciones</h2>
+    </header>
+
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="pantalla.html" target="_blank" class="nav-link">🖥️ Abrir Pantalla Visual (Pizarra)</a>
+    </div>
+
+    <div class="container">
+        <!-- Zona de Carga Masiva desde Excel -->
+        <div class="form-section-title" style="background-color: #28a745; color: white; padding: 4px 6px; border-radius: 3px; font-weight: bold; font-size: 12px;">Carga Masiva desde Excel</div>
+        <div style="background: #f8f9fa; border: 1px solid #28a745; padding: 15px; border-radius: 4px; margin-bottom: 25px;">
+            <p style="font-size: 11px; color: #555; margin-bottom: 8px;">
+                Copia las celdas en Excel (7 columnas en orden: <strong>Día, Turno, Equipo, Descripción, Orden, Grupo, Cambio de Filtro</strong>) y pégalas abajo. Para el filtro, escribe "X" si aplica o déjalo en blanco.
+            </p>
+            <div class="form-group">
+                <textarea id="excelPasteArea" rows="4" placeholder="Haga clic aquí y presione Ctrl + V para pegar la tabla de Excel..." style="font-family: monospace; font-size: 11px; resize: vertical; width: 100%; box-sizing: border-box; padding: 6px;"></textarea>
+            </div>
+            <button type="button" id="btnProcesarExcel" style="background-color: #28a745; color: white; padding: 8px; width: 100%; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">⚡ Procesar y Cargar Filas</button>
+        </div>
+
+        <!-- Formulario Manual -->
+        <div class="form-container">
+            <h2>Ingreso de Datos Individual</h2>
+            <form id="registroForm">
+                <div class="form-section-title">Programa de Turno</div>
+                <div class="form-group">
+                    <label for="dia">Día</label>
+                    <select id="dia" required>
+                        <option value="Viernes">Viernes</option>
+                        <option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miércoles">Miércoles</option>
+                        <option value="Jueves">Jueves</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="turno">Turno</label>
+                    <input type="text" id="turno" placeholder="Ej: 1A / 2B" required>
+                </div>
+                <div class="form-group">
+                    <label for="equipo">Equipo</label>
+                    <input type="text" id="equipo" placeholder="Ej: CA-05" required>
+                </div>
+                <div class="form-group">
+                    <label for="descripcion">Descripción de la Orden / Trabajo</label>
+                    <input type="text" id="descripcion" placeholder="Ej: PLAN BISEMANAL" required>
+                </div>
+                <div class="form-group">
+                    <label for="orden">Número de Orden</label>
+                    <input type="text" id="orden" placeholder="Ej: 4016740571" required>
+                </div>
+                <div class="form-group">
+                    <label for="grupo">Grupo Responsable</label>
+                    <input type="text" id="grupo" placeholder="Ej: GRUPO 1" required>
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label class="checkbox-label"><input type="checkbox" id="cambioFiltro"> Cambio de Filtro (Programa)</label>
+                </div>
+
+                <button type="submit" style="width: 100%; padding: 10px; background: #002f6c; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Agregar a la Pizarra</button>
+            </form>
+            <button type="button" id="btnLimpiarPizarra" style="background-color: #dc3545; margin-top: 15px; width: 100%; padding: 10px; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">🗑️ Limpiar Pizarra</button>
+        </div>
+        
+        <div class="table-container" style="margin-top: 20px;">
+            <h3 style="font-size: 14px; margin-bottom: 10px; text-transform: uppercase;">Lista de Gestión de Filas</h3>
+            <table id="datosTable" style="width:100%; border-collapse:collapse; font-size:12px;">
+                <thead>
+                    <tr style="background:#eee;">
+                        <th style="padding:8px; border:1px solid #ccc;">Equipo</th>
+                        <th style="padding:8px; border:1px solid #ccc;">Día/Turno</th>
+                        <th style="padding:8px; border:1px solid #ccc;">Filtro</th>
+                        <th style="padding:8px; border:1px solid #ccc;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Edición de Ejecución Completo -->
+    <div id="modalEjecucion" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Actualizar Ejecución</h2>
+            <p id="modalInfoEquipo" style="font-size: 13px; color: #555; margin-bottom: 15px; font-weight: bold;"></p>
+            
+            <form id="formModalEjecucion">
+                <div class="form-group">
+                    <label for="modOctopus">Status OCTOPUS</label>
+                    <select id="modOctopus" required>
+                        <option value="-">-</option>
+                        <option value="Abierta">Abierta</option>
+                        <option value="Cerrada">Cerrada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modSap">Status SAP</label>
+                    <select id="modSap" required>
+                        <option value="-">-</option>
+                        <option value="Abierta">Abierta</option>
+                        <option value="Cerrada">Cerrada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label"><input type="checkbox" id="modCambioFiltro"> Cambio de Filtro</label>
+                </div>
+                  <div class="form-group">
+                    <label class="checkbox-label"><input type="checkbox" id="modListo"> Mina</label>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label"><input type="checkbox" id="modTaller"> En Taller</label>
+                </div>
+                <div class="form-group">
+                    <label for="modComentarios">Comentarios / Observaciones</label>
+                    <textarea id="modComentarios" rows="3" placeholder="Anotar detalles técnicos..."></textarea>
+                </div>
+                <button type="submit" style="background-color: #28a745; width:100%; padding:10px; color:white; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script-control.js"></script>
+</body>
+</html>

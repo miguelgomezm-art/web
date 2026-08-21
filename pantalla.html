@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizarra Informativa - AngloAmerican Flota 930E</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container { grid-template-columns: 1fr; }
+        .table-container { padding: 5px; box-shadow: none; background: transparent; }
+        table { font-size: 13px; background: white; width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #000; padding: 10px; text-align: center; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .main-header { font-size: 14px; text-transform: uppercase; background-color: #002f6c !important; color: white; }
+        
+        /* Estilos para la nueva barra de filtros rápidos */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin: 0 5px 15px 5px;
+            align-items: center;
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .filter-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+        .btn-filter {
+            background-color: #f2f2f2;
+            color: #333;
+            border: 1px solid #999;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-filter:hover {
+            background-color: #e6e6e6;
+        }
+        .btn-filter.active {
+            background-color: #002f6c;
+            color: white;
+            border-color: #002f6c;
+        }
+    </style>
+</head>
+<body>
+
+    <header style="background-color: #002f6c; color: white; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+        <h2>PROGRAMACIÓN MANTENCIONES BISEMANALES FLOTA 930E</h2>
+    </header>
+
+    <!-- Barra de Filtros por Grupo Dinámica -->
+    <div class="filter-bar">
+        <span class="filter-label">Filtrar por Responsable:</span>
+        <div id="botonesFiltroContainer" style="display: flex; gap: 8px;">
+            <!-- Los botones se generarán solos según los grupos que existan en tu Excel -->
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="table-container">
+            <table id="datosTable">
+                <thead>
+                    <tr class="main-header">
+                        <th colspan="7">PROGRAMA</th>
+                        <th colspan="2">EJECUCIÓN</th>
+                    </tr>
+                      <tr>
+                        <th style="width: 7%;">DÍA</th>
+                        <th style="width: 5%;">TURNO</th>
+                        <th style="width: 9%;">EQUIPO</th>
+                        <th style="width: 22%;">DESCRIPCIÓN DE LA ORDEN</th>
+                        <th style="width: 11%;">ORDEN</th>
+                        <th style="width: 10%;">GRUPO RESP.</th>
+                        <th style="width: 11%; background-color: #e2f0d9;">CAMBIO FILTRO</th>
+                        <th style="width: 6%;">MINA</th> <!-- Se cambió LISTO por MINA -->
+                        <th style="width: 6%;">TALLER</th>
+                        <th style="width: 13%;">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script-pantalla.js"></script>
+</body>
+</html>
