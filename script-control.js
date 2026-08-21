@@ -1,6 +1,6 @@
 let filaSeleccionada = null;
 
-const IP_SERVIDOR = "192.168.1.15"; // Reemplaza por tu IP IPv4 central
+const IP_SERVIDOR = "https://miguelgomezm-art.github.io/web/"; // Reemplaza por tu IP IPv4 central
 const socketMantencion = new WebSocket(`ws://${IP_SERVIDOR}:8085`);
 
 socketMantencion.onmessage = function(event) {
