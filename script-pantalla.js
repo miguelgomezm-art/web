@@ -30,6 +30,7 @@ function renderizarTablaVisual() {
     const tbody = document.querySelector('#datosTable tbody');
     tbody.innerHTML = '';
 
+    
     if (!datosGuardados) {
         actualizarBarraFiltros([]);
         return;
