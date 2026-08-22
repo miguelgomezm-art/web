@@ -125,7 +125,7 @@ window.cambiarFiltroGrupo = function(grupo) {
 };
 
 // --- CONEXIÓN EN TIEMPO REAL (WEBSOCKETS) ---
-const IP_SERVIDOR_VISUAL = "192.168.1.15"; 
+const IP_SERVIDOR_VISUAL = "10.185.208.40"; 
 const socketVisual = new WebSocket(`ws://${IP_SERVIDOR_VISUAL}:8085`);
 socketVisual.onmessage = () => renderizarTablaVisual();
 
